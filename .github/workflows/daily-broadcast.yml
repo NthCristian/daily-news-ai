@@ -1,0 +1,31 @@
+name: Daily News Broadcast
+
+on:
+  schedule:
+    # Runs every day at 9:00 AM Brasília time (UTC-3 → 12:00 UTC)
+    - cron: "0 12 * * *"
+  workflow_dispatch: # Allows manual trigger from the Actions tab
+
+jobs:
+  broadcast:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run broadcast
+        run: bun index.ts broadcast
+        env:
+          MODEL_NAME: ${{ secrets.MODEL_NAME }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          API_KEY: ${{ secrets.API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
