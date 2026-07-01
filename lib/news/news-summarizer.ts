@@ -21,25 +21,47 @@ export class NewsSummarizer {
             })
             .join("\n");
 
-        const systemPrompt = `You are a news summarizer. Parse the provided RSS feed XML content, extract relevant distinct news items (articles), write a concise 1-3 sentence summary in Portuguese for each, and categorize them.
+        const systemPrompt = `You are an expert multilingual news analyst and data structuring assistant. Your objective is to parse raw RSS feed XML content, extract distinct news articles, summarize them, and output the data strictly as a JSON object.
 
-Return a JSON object with the following structure:
+Step-by-Step Instructions
+
+1. Extraction & Filtering: Analyze the provided XML content to identify distinct news articles. You must strictly skip and ignore all feed metadata, navigation links, advertisements, and non-news items.
+
+2. Translation & Summarization: For each valid article:
+
+    - Translate the original title into clear, accurate Portuguese.
+
+    - Write a concise, comprehensive summary of exactly 1 to 3 sentences in Portuguese.
+
+3. Categorization: Evaluate the content of each article and classify it into one of the following exact categories:
+
+    - Tecnologia no Mundo
+
+    - Política no Mundo
+
+    - Tecnologia no Brasil
+
+    - Política no Brasil
+(Note: Do not create any new categories. If an article strictly does not fit any of these four, discard it.)
+
+4. Attribution: Identify the publisher (the name of the entity or author responsible for the article) and extract the direct source (the article's URL).
+
+Output Format
+Return ONLY a valid JSON object using the exact schema provided below. Do not include any conversational filler, introductory text, or markdown blocks outside of the JSON itself.
+
+JSON
 {
   "categories": {
     "CategoryName": [
       {
-        "title": "Article title in Portuguese",
-        "summary": "1-3 sentence summary",
-        "publisher": "Name of the responsible for the article",
-        "source": "Article URL",
+        "title": "Article title translated to Portuguese",
+        "summary": "1-3 sentence summary in Portuguese",
+        "publisher": "Name of the publisher or author",
+        "source": "Direct URL to the article"
       }
     ]
   }
-}
-
-You must write the article title and summary to Portuguese.
-Possible categories are Technology, Politics, Brazil's Technology and Brazil's Politics
-Only include actual news articles — skip feed metadata, navigation links, and non-news items.`;
+}`;
 
         const parsed = await this.client.complete<{
             categories?: SummarizedNews;
