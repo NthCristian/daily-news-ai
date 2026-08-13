@@ -1,9 +1,9 @@
 name: Daily News Broadcast
 
 on:
-  schedule:
+  #schedule:
     # Runs every day at 9:00 AM Brasília time (UTC-3 → 12:00 UTC)
-    - cron: "0 12 * * *"
+    # - cron: "0 12 * * *"
   workflow_dispatch: # Allows manual trigger from the Actions tab
 
 jobs:
